@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis History - CIFAKE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        .striped-row:nth-child(odd) { background-color: #ffffff; }
+        .striped-row:nth-child(even) { background-color: #f8f9fa; }
+        .striped-row:hover { background-color: #f0f2f5; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#162839',
+                        'primary-light': '#3a526c',
+                        'secondary': '#b4271d',
+                        'secondary-light': '#d65a4f',
+                        'tertiary': '#002e14',
+                        'tertiary-light': '#1d5c3e',
+                        'surface': '#fffbfe',
+                        'background': '#fffbfe',
+                        'success': '#27AE60',
+                        'warning': '#F39C12',
+                        'error': '#E74C3C',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background">
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+        <nav class="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between flex-wrap gap-4">
+            <a href="/" class="flex items-center space-x-2 font-bold text-xl text-primary hover:opacity-80 transition">
+                <span class="material-symbols-outlined">shield_alert</span>
+                <span>CIFAKE</span>
+            </a>
+            <div class="flex items-center space-x-8" id="main-nav">
+                <a href="/" class="nav-link text-gray-700 hover:text-primary transition font-medium pb-1 border-b-2 border-transparent" data-page="home">Home</a>
+                <a href="/analyzer" class="nav-link text-gray-700 hover:text-primary transition font-medium pb-1 border-b-2 border-transparent" data-page="analyzer">Analyzer</a>
+                <a href="/history" class="nav-link text-gray-700 hover:text-primary transition font-medium pb-1 border-b-2 border-transparent" data-page="history">History</a>
+                <a href="/features" class="nav-link text-gray-700 hover:text-primary transition font-medium pb-1 border-b-2 border-transparent" data-page="features">Features</a>
+                <a href="/technology" class="nav-link text-gray-700 hover:text-primary transition font-medium pb-1 border-b-2 border-transparent" data-page="technology">Technology</a>
+                <a href="/documentation" class="nav-link text-gray-700 hover:text-primary transition font-medium pb-1 border-b-2 border-transparent" data-page="documentation">Documentation</a>
+                <button onclick="signOut()" class="flex items-center gap-1 text-gray-700 hover:text-primary transition font-medium px-2 py-1">
+                    <span class="material-symbols-outlined" style="font-size:18px;">logout</span>Sign Out
+                </button>
+            </div>
+            <script>
+            async function signOut() {
+              await fetch('/logout', { method: 'POST' });
+              window.location.href = '/signin';
+            }
+            </script>
+            <script>
+            (function() {
+            const path = window.location.pathname;
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => {
+            const page = link.getAttribute('data-page');
+            if ((path === '/' && page === 'home') || path === `/${page}`) {
+            link.classList.add('text-primary', 'border-primary');
+            link.classList.remove('text-gray-700');
+            }
+            });
+            })();
+            </script>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-8 py-8">
+        <!-- Page Title -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-primary mb-2">Analysis History</h1>
+            <p class="text-gray-600">View, filter, and export your forensic analysis results</p>
+        </div>
+
+        <!-- Filter & Search Bar (80px height container) -->
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 items-center">
+                <!-- Search Input (300px) -->
+                <div class="lg:col-span-2">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search by filename..." 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                    />
+                </div>
+
+                <!-- Class Filter (150px) -->
+                <div>
+                    <select 
+                        id="classFilter" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition appearance-none bg-white cursor-pointer"
+                    >
+                        <option value="">All Classes</option>
+                        <option value="REAL">Real</option>
+                        <option value="FAKE">Fake</option>
+                    </select>
+                </div>
+
+                <!-- Date Filter (150px) -->
+                <div>
+                    <select 
+                        id="dateFilter" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition appearance-none bg-white cursor-pointer"
+                    >
+                        <option value="">All Dates</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+
+                <!-- Export CSV Button (right-aligned) -->
+                <div class="lg:text-right">
+                    <button 
+                        onclick="exportHistory()" 
+                        class="w-full lg:w-auto px-6 py-3 bg-primary hover:bg-primary-light text-white rounded-lg font-medium transition flex items-center justify-center lg:justify-end space-x-2"
+                    >
+                        <span class="material-symbols-outlined" style="font-size: 20px;">download</span>
+                        <span>EXPORT CSV</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Table Container -->
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+            <!-- Empty State (shown when no data) -->
+            <div id="emptyState" class="hidden p-16 text-center">
+                <div class="flex justify-center mb-4">
+                    <span class="material-symbols-outlined text-gray-400" style="font-size: 64px;">folder_open</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">No analysis history yet</h3>
+                <p class="text-gray-500 mb-6">Upload an image to get started with forensic analysis</p>
+                <a href="/analyzer" class="inline-block px-6 py-3 bg-primary hover:bg-primary-light text-white rounded-lg font-medium transition">
+                    UPLOAD IMAGE
+                </a>
+            </div>
+
+            <!-- Table (shown when data exists) -->
+            <div id="tableContainer" class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-24">Date & Time</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-48">Filename</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-28">Result</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-32">Confidence</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700 w-24">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- Populated dynamically via /api/predictions -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination Footer -->
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
+                <span class="text-sm text-gray-600">Showing <span id="pageStart">1</span> to <span id="pageEnd">5</span> of <span id="totalRecords">5</span> analyses</span>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-600">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
+                    <button onclick="previousPage()" id="prevBtn" class="p-2 text-primary hover:bg-gray-200 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button onclick="nextPage()" id="nextBtn" class="p-2 text-primary hover:bg-gray-200 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Analyzer Button -->
+        <div class="mt-8 text-center">
+            <a href="/analyzer" class="inline-flex items-center space-x-2 px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span>BACK TO ANALYZER</span>
+            </a>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        let currentPage = 1;
+        const rowsPerPage = 10;
+        let allPredictions = [];
+
+        // ── Load real data from API ──────────────────────────────────────────
+        async function loadHistory() {
+            try {
+                const res = await fetch('/api/predictions?limit=200');
+                if (!res.ok) throw new Error('Not authenticated');
+                const data = await res.json();
+                allPredictions = data.predictions || [];
+                renderTable(allPredictions);
+            } catch (err) {
+                console.error('Error loading history:', err);
+                showEmpty();
+            }
+        }
+
+        function formatDate(ts) {
+            if (!ts) return '—';
+            const d = new Date(ts);
+            return d.toISOString().replace('T', ' ').substring(0, 16);
+        }
+
+        function renderTable(predictions) {
+            const tbody = document.getElementById('historyTableBody');
+            tbody.innerHTML = '';
+
+            if (!predictions.length) { showEmpty(); return; }
+
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('tableContainer').classList.remove('hidden');
+
+            predictions.forEach(p => {
+                const isFake = p.prediction === 'FAKE';
+                const confPct = (parseFloat(p.confidence) * 100).toFixed(1);
+                const barColor = isFake
+                    ? 'bg-gradient-to-r from-red-500 to-orange-400'
+                    : 'bg-gradient-to-r from-green-500 to-emerald-400';
+                const badgeHtml = isFake
+                    ? `<span class="inline-flex items-center space-x-1 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-semibold"><span>🔴</span><span>FAKE</span></span>`
+                    : `<span class="inline-flex items-center space-x-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold"><span>🟢</span><span>REAL</span></span>`;
+
+                const tr = document.createElement('tr');
+                tr.className = 'striped-row border-b border-gray-200 h-14 transition';
+                tr.dataset.prediction = p.prediction;
+                tr.dataset.timestamp = p.timestamp || '';
+                tr.dataset.id = p.id;
+                tr.innerHTML = `
+                    <td class="px-6 py-4 text-sm text-gray-800">${formatDate(p.timestamp)}</td>
+                    <td class="px-6 py-4 text-sm text-gray-800 truncate max-w-[200px]" title="${p.image_name || ''}">${p.image_name || '—'}</td>
+                    <td class="px-6 py-4">${badgeHtml}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-semibold text-gray-800">${confPct}%</span>
+                            <div class="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="h-full ${barColor}" style="width:${confPct}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex items-center justify-center space-x-2">
+                            <button onclick="viewResult(${p.id})" class="text-primary hover:text-primary-light transition" title="View details">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </button>
+                            <button onclick="deleteRecord(this, ${p.id})" class="text-gray-400 hover:text-error transition" title="Delete">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </div>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+
+            updatePagination();
+        }
+
+        function showEmpty() {
+            document.getElementById('emptyState').classList.remove('hidden');
+            document.getElementById('tableContainer').classList.add('hidden');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHistory();
+            setupEventListeners();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('keyup', filterTable);
+            document.getElementById('classFilter').addEventListener('change', filterTable);
+            document.getElementById('dateFilter').addEventListener('change', filterTable);
+        }
+
+        // Filter table rows
+        function filterTable() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const classValue  = document.getElementById('classFilter').value;
+            const dateValue   = document.getElementById('dateFilter').value;
+            const rows = document.querySelectorAll('#historyTableBody tr');
+
+            const today = new Date();
+            let visibleRows = 0;
+
+            rows.forEach(row => {
+                const filename  = row.cells[1].textContent.toLowerCase();
+                const result    = row.dataset.prediction || '';
+                const tsStr     = row.dataset.timestamp || '';
+                const rowDate   = tsStr ? new Date(tsStr) : null;
+
+                let matches = true;
+
+                if (searchValue && !filename.includes(searchValue)) matches = false;
+                if (classValue && result !== classValue) matches = false;
+
+                if (dateValue && rowDate) {
+                    const diffDays = (today - rowDate) / (1000 * 60 * 60 * 24);
+                    if (dateValue === 'today'  && diffDays > 1)  matches = false;
+                    if (dateValue === 'week'   && diffDays > 7)  matches = false;
+                    if (dateValue === 'month'  && diffDays > 30) matches = false;
+                }
+
+                row.style.display = matches ? '' : 'none';
+                if (matches) visibleRows++;
+            });
+
+            currentPage = 1;
+            updatePagination();
+        }
+
+        // Update pagination display
+        function updatePagination() {
+            const allRows = Array.from(document.querySelectorAll('#historyTableBody tr'));
+            const visibleRows = allRows.filter(r => r.style.display !== 'none');
+            const totalPages  = Math.max(1, Math.ceil(visibleRows.length / rowsPerPage));
+
+            document.getElementById('totalRecords').textContent = visibleRows.length;
+            document.getElementById('currentPage').textContent  = currentPage;
+            document.getElementById('totalPages').textContent   = totalPages;
+
+            const pageStart = visibleRows.length ? (currentPage - 1) * rowsPerPage + 1 : 0;
+            const pageEnd   = Math.min(currentPage * rowsPerPage, visibleRows.length);
+            document.getElementById('pageStart').textContent = pageStart;
+            document.getElementById('pageEnd').textContent   = pageEnd;
+
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+
+            // Show only rows for current page
+            let count = 0;
+            visibleRows.forEach(row => {
+                count++;
+                row.style.display = (count > (currentPage - 1) * rowsPerPage && count <= currentPage * rowsPerPage) ? '' : 'none';
+            });
+        }
+
+        function previousPage() {
+            if (currentPage > 1) { currentPage--; updatePagination(); }
+        }
+
+        function nextPage() {
+            const visible    = Array.from(document.querySelectorAll('#historyTableBody tr')).filter(r => r.style.display !== 'none').length;
+            const totalPages = Math.ceil(visible / rowsPerPage);
+            if (currentPage < totalPages) { currentPage++; updatePagination(); }
+        }
+
+        // View — open explanation page with real DB ID
+        function viewResult(predictionId) {
+            window.location.href = `/explanation?id=${predictionId}`;
+        }
+
+        // Delete via API
+        function deleteRecord(button, predictionId) {
+            if (!confirm('Delete this analysis record?')) return;
+            fetch(`/api/predictions/${predictionId}`, { method: 'DELETE' })
+                .then(r => r.json())
+                .then(() => {
+                    const row = button.closest('tr');
+                    row.style.opacity = '0.4';
+                    setTimeout(() => { row.remove(); filterTable(); }, 300);
+                })
+                .catch(err => console.error('Delete failed:', err));
+        }
+
+        // Export CSV
+        function exportHistory() {
+            const rows = Array.from(document.querySelectorAll('#historyTableBody tr')).filter(r => r.style.display !== 'none');
+            let csv = 'Date & Time,Filename,Result,Confidence\n';
+            rows.forEach(row => {
+                const date       = row.cells[0].textContent.trim();
+                const filename   = row.cells[1].textContent.trim();
+                const result     = row.dataset.prediction || '';
+                const confMatch  = row.cells[3].textContent.match(/[\d.]+%/);
+                const confidence = confMatch ? confMatch[0] : '';
+                csv += `"${date}","${filename}","${result}","${confidence}"\n`;
+            });
+            const link = document.createElement('a');
+            link.href     = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+            link.download = `cifake_history_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+    </script>
+</body>
+</html>

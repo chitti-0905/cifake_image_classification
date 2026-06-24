@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CIFAKE | Forensic Analysis</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#61de8a",
+                    "primary-fixed-dim": "#b5c8df",
+                    "on-secondary-fixed-variant": "#910807",
+                    "surface": "#f6fafb",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-fixed": "#00210c",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#36485b",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#ffdad5",
+                    "tertiary-fixed": "#7efba4",
+                    "surface-tint": "#4e6073",
+                    "surface-container": "#eaeeef",
+                    "on-surface-variant": "#43474c",
+                    "secondary": "#b4271d",
+                    "on-tertiary-container": "#3cbe6e",
+                    "inverse-on-surface": "#edf1f2",
+                    "primary": "#162839",
+                    "on-secondary-container": "#610001",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#181c1d",
+                    "surface-container-highest": "#dfe3e4",
+                    "outline-variant": "#c4c6cd",
+                    "on-tertiary-fixed-variant": "#005228",
+                    "surface-container-high": "#e5e9ea",
+                    "surface-variant": "#dfe3e4",
+                    "surface-container-lowest": "#ffffff",
+                    "error": "#ba1a1a",
+                    "primary-container": "#2c3e50",
+                    "on-error": "#ffffff",
+                    "inverse-primary": "#b5c8df",
+                    "tertiary": "#002e14",
+                    "on-secondary-fixed": "#410000",
+                    "on-background": "#181c1d",
+                    "surface-container-low": "#f0f4f5",
+                    "surface-bright": "#f6fafb",
+                    "primary-fixed": "#d1e4fb",
+                    "inverse-surface": "#2c3132",
+                    "error-container": "#ffdad6",
+                    "tertiary-container": "#004721",
+                    "on-primary-fixed": "#091d2e",
+                    "on-primary-container": "#96a9be",
+                    "secondary-fixed-dim": "#ffb4a9",
+                    "secondary-container": "#fe5c4a",
+                    "background": "#f6fafb",
+                    "surface-dim": "#d7dbdc",
+                    "outline": "#74777d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "base": "4px",
+                    "margin-desktop": "32px",
+                    "max-width": "1440px",
+                    "margin-mobile": "16px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "code-md": ["JetBrains Mono"],
+                    "headline-md": ["Inter"],
+                    "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "code-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        @keyframes rotate-spinner {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes progress-fill {
+            from { width: 0%; }
+            to { width: 85%; }
+        }
+        .spinner {
+            width: 64px;
+            height: 64px;
+            border: 4px solid rgba(22, 40, 57, 0.2);
+            border-top-color: #E74C3C;
+            border-radius: 50%;
+            animation: rotate-spinner 2s linear infinite;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #162839, #E74C3C);
+            border-radius: 4px;
+            animation: progress-fill 3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="w-full top-0 sticky bg-surface z-50 border-b border-outline-variant">
+<div class="flex justify-between items-center h-16 px-margin-desktop max-w-max-width mx-auto">
+<div class="text-headline-md font-headline-md text-primary tracking-tight">CIFAKE</div>
+<nav class="flex gap-8 items-center flex-wrap justify-center" id="main-nav">
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/features" data-page="features">Features</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/technology" data-page="technology">Technology</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/documentation" data-page="documentation">Documentation</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/" data-page="home">Home</a>
+</nav>
+<script>
+(function() {
+const path = window.location.pathname;
+const links = document.querySelectorAll('.nav-link');
+links.forEach(link => {
+const href = link.getAttribute('href');
+const page = link.getAttribute('data-page');
+if ((path === '/' && page === 'home') || path === `/${page}`) {
+link.classList.add('text-primary', 'border-primary');
+}
+});
+})();
+</script>
+<div class="flex gap-4 items-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors px-4 py-2 font-body-md">Sign In</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-bold hover:bg-primary-container transition-all active:scale-95 duration-100">Analyze Now</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow max-w-max-width mx-auto px-margin-desktop py-12 w-full grid grid-cols-1 lg:grid-cols-10 gap-gutter">
+<!-- Left Column (70%) -->
+<div class="lg:col-span-7 flex flex-col items-center justify-center space-y-12">
+<div class="w-full">
+<h1 class="text-display-lg font-display-lg text-primary text-center mb-2">Forensic Analysis</h1>
+<p class="text-center text-on-surface-variant text-body-lg">AI-Generated Image Detection in Progress</p>
+</div>
+<!-- Spinner -->
+<div class="flex justify-center">
+<div class="spinner"></div>
+</div>
+<!-- Status Message -->
+<div class="text-center space-y-2">
+<div class="text-headline-md font-headline-md text-on-surface">⏳ Analyzing Image...</div>
+<p class="text-on-surface-variant text-body-md">Scanning metadata &amp; pixel distribution</p>
+</div>
+<!-- Progress Bar -->
+<div class="w-full max-w-md">
+<div class="h-2 bg-surface-container rounded-full overflow-hidden border border-outline-variant">
+<div class="progress-bar-fill"></div>
+</div>
+<div class="text-center text-label-sm text-on-surface-variant mt-3">Processing: <span id="progress-value">15</span>%</div>
+</div>
+<!-- Status Overlay (Bottom) -->
+<div class="w-full max-w-md mt-12 bg-surface-container p-4 rounded-lg border border-outline-variant text-center">
+<div class="text-label-sm text-outline font-mono mb-1">SECURE_CHANNEL_ACTIVE</div>
+<div class="text-code-md text-on-surface-variant font-code-md">Thread ID: <span class="text-primary">04x78291b</span></div>
+</div>
+</div>
+<!-- Right Sidebar (30%) -->
+<aside class="lg:col-span-3 space-y-gutter">
+<!-- Info Card 1: How It Works -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant shadow-sm">
+<h4 class="text-body-lg font-bold text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+How It Works
+</h4>
+<ul class="space-y-4">
+<li class="flex gap-4">
+<span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">1</span>
+<p class="text-on-surface-variant text-body-md">Deep pixel-level artifact analysis</p>
+</li>
+<li class="flex gap-4">
+<span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">2</span>
+<p class="text-on-surface-variant text-body-md">Metadata &amp; EXIF forensics</p>
+</li>
+<li class="flex gap-4">
+<span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">3</span>
+<p class="text-on-surface-variant text-body-md">ML-powered confidence scoring</p>
+</li>
+</ul>
+</div>
+<!-- Info Card 2: Model Specs (Table) -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant shadow-sm">
+<h4 class="text-body-lg font-bold text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">settings_suggest</span>
+Model Specs
+</h4>
+<table class="w-full text-body-md">
+<tbody class="space-y-3">
+<tr class="border-b border-outline-variant">
+<td class="py-3 text-on-surface-variant font-label-sm uppercase">Architecture</td>
+<td class="py-3 text-right font-code-md text-primary font-bold">CNN</td>
+</tr>
+<tr class="border-b border-outline-variant">
+<td class="py-3 text-on-surface-variant font-label-sm uppercase">Dataset</td>
+<td class="py-3 text-right font-code-md text-primary font-bold">CIFAKE 60k</td>
+</tr>
+<tr class="border-b border-outline-variant">
+<td class="py-3 text-on-surface-variant font-label-sm uppercase">Accuracy</td>
+<td class="py-3 text-right font-code-md text-primary font-bold">92.98%</td>
+</tr>
+<tr>
+<td class="py-3 text-on-surface-variant font-label-sm uppercase">Latency</td>
+<td class="py-3 text-right font-code-md text-primary font-bold">0.8s</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Image Preview Card (Interactive) -->
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant shadow-sm group cursor-pointer hover:border-primary transition-colors">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden mb-3 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" alt="Image being analyzed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp4ApJh1Gvb76BkQ9tmun37T30Smrr8Vn2NQFnoKnuGnsTEIoKSgNQ5O9XB4NKskevfSpp0uG3S2fmHgk13MqD7hAlMrO5_GXZqSn3ka6EV-Jd-lHlMEjlEqt9HQSkThZ60gOiXhlV4_GzFSRjEcwlZDnBZW1Ztf5oFnR6XJPF33uEIBfAC8qedbsCMrmfRWRVAEe6p5ea1Y_P8UwWg7mwat4wjPvq_ZiOz0F4w5lMCHgjCM3YEB5CCRSI4B2p2OHsr3Qx-pyueVle"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-4xl">zoom_in</span>
+</div>
+</div>
+<p class="text-label-sm text-on-surface-variant font-code-md">Image: forensic_sample.jpg</p>
+</div>
+</aside>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-surface-container-lowest border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter px-margin-desktop py-8 max-w-max-width mx-auto items-center">
+<div class="text-label-sm text-on-surface-variant">
+<div class="text-body-lg font-headline-md text-primary mb-2">CIFAKE</div>
+© 2024 CIFAKE Forensics. All rights reserved. Built for security professionals.
+</div>
+<div class="flex flex-wrap gap-x-8 gap-y-2 md:justify-end">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Security Disclosure</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">API Framework</a>
+</div>
+</div>
+</footer>
+<script>
+        let progress = 15;
+        const progressValue = document.getElementById('progress-value');
+        const interval = setInterval(() => {
+            progress = Math.min(progress + Math.random() * 15, 95);
+            progressValue.textContent = Math.floor(progress);
+        }, 500);
+    </script>
+</body></html>

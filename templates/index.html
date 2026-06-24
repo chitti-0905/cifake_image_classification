@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIFAKE Image Analyzer - Detect AI-Generated Images</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/analyzer.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold" href="/">
+                🔍 CIFAKE Analyzer
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/analyzer">Analyze</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/history">History</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-banner d-flex align-items-center justify-content-center text-center">
+        <div class="hero-content">
+            <div class="hero-icon mb-4">
+                <div class="icon-circle">🔍</div>
+            </div>
+            <h1 class="hero-title mb-3">CIFAKE Image Analyzer</h1>
+            <p class="hero-subtitle mb-5">Detect AI-Generated Images with Machine Learning & Transparency</p>
+            <div class="hero-buttons">
+                <a href="/analyzer" class="btn btn-lg btn-primary-accent mr-3">
+                    ↓ UPLOAD IMAGE
+                </a>
+                <button class="btn btn-lg btn-outline-light" data-toggle="modal" data-target="#learnModal">
+                    LEARN MORE ▶
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section py-5">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Why CIFAKE?</h2>
+            <div class="row">
+                <!-- Feature 1 -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h5 class="feature-title">AI Detection</h5>
+                        <p class="feature-desc">Detects synthetic images with high accuracy</p>
+                    </div>
+                </div>
+                <!-- Feature 2 -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">👁️</div>
+                        <h5 class="feature-title">Visual Explanations</h5>
+                        <p class="feature-desc">Grad-CAM heatmaps show what model sees</p>
+                    </div>
+                </div>
+                <!-- Feature 3 -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h5 class="feature-title">Real-time Analysis</h5>
+                        <p class="feature-desc">Results in under 500ms per image</p>
+                    </div>
+                </div>
+                <!-- Feature 4 -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h5 class="feature-title">Prediction History</h5>
+                        <p class="feature-desc">Track all analyses and export reports</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section py-5 text-center">
+        <div class="container">
+            <h2 class="mb-4">Ready to Detect AI Images?</h2>
+            <a href="/analyzer" class="btn btn-lg btn-primary-accent">GET STARTED NOW ▶</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-1">© 2026 CIFAKE Image Analyzer | <a href="#">Privacy</a> | <a href="#">Terms</a></p>
+            <p class="text-muted small">Built with TensorFlow & Bootstrap 4</p>
+        </div>
+    </footer>
+
+    <!-- Learn More Modal -->
+    <div class="modal fade" id="learnModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">How CIFAKE Works</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>🎯 Our Mission:</strong> Detect AI-generated images in real-time</p>
+                    <p><strong>🧠 Technology:</strong> CNN with 92.98% accuracy</p>
+                    <p><strong>📊 Explainability:</strong> Grad-CAM heatmaps show decision regions</p>
+                    <p><strong>⚡ Speed:</strong> Process images in under 500ms</p>
+                    <p class="mt-3"><em>Upload any image to test the analyzer instantly!</em></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a href="/analyzer" class="btn btn-primary-accent">Try Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/analyzer.js') }}"></script>
+</body>
+</html>

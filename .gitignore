@@ -1,0 +1,124 @@
+# Git Ignore File for CIFAKE Project
+
+# ============= Python =============
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ============= IDE =============
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ============= Jupyter Notebooks =============
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+.jupyter/
+
+# ============= Data & Models =============
+dataset/REAL/
+dataset/FAKE/
+models/*.hdf5
+models/*.h5
+models/*.pkl
+models/*.pickle
+*.npy
+*.npz
+
+# ============= Uploads & Temporary Files =============
+static/uploads/
+uploads/
+temp/
+tmp/
+*.tmp
+
+# ============= Database =============
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# ============= Logs =============
+*.log
+logs/
+*.log.*
+
+# ============= Environment =============
+.env
+.env.local
+.env.*.local
+
+# ============= Output & Reports =============
+outputs/gradcam_visualizations/
+outputs/*.png
+outputs/*.jpg
+outputs/*.csv
+outputs/*.json
+outputs/*.txt
+
+# ============= OS Files =============
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ============= Coverage Reports =============
+.coverage
+htmlcov/
+.coverage.*
+coverage.xml
+*.cover
+
+# ============= Test Results =============
+.pytest_cache/
+.tox/
+junit.xml
+
+# ============= Package Distribution =============
+build/
+dist/
+*.tar.gz
+*.whl
+
+# ============= Type Checking =============
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ============= Black Formatter =============
+.black_cache/
+
+# ============= Project Specific =============
+*.pickle
+*.pkl
+predictions_history.json
+training_stats.json
+run.bat
+run.sh

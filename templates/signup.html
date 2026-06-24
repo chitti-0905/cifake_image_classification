@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - CIFAKE Image Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #d53c2a;
+            --primary-dark: #b83a28;
+            --surface: #fffbfe;
+            --on-bg: #1c1b1f;
+            --on-variant: #49454f;
+            --outline: #ccc7d0;
+        }
+    
+        body {
+            background: linear-gradient(135deg, #ffdad4 0%, #ffe5e0 100%);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--surface);
+            border-radius: 28px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .signup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .signup-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--on-bg);
+            margin-bottom: 0.5rem;
+        }
+
+        .signup-subtitle {
+            font-size: 14px;
+            color: var(--on-variant);
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--on-bg);
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem;
+            border: 1px solid var(--outline);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(213, 60, 42, 0.1);
+        }
+
+        .form-input.error {
+            border-color: #d32f2f;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--on-variant);
+            margin-top: 0.25rem;
+        }
+
+        .password-strength {
+            height: 4px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .strength-weak { background-color: #d32f2f; }
+        .strength-fair { background-color: #f57c00; }
+        .strength-good { background-color: #fbc02d; }
+        .strength-strong { background-color: #388e3c; }
+
+        .form-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 14px;
+        }
+
+        .form-checkbox input {
+            cursor: pointer;
+            accent-color: var(--primary);
+            margin-top: 0.25rem;
+            flex-shrink: 0;
+        }
+
+        .form-checkbox label {
+            cursor: pointer;
+            color: var(--on-variant);
+            line-height: 1.5;
+        }
+
+        .form-checkbox a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-signup {
+            width: 100%;
+            padding: 0.875rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            margin-top: 0.5rem;
+        }
+
+        .btn-signup:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(213, 60, 42, 0.3);
+        }
+
+        .btn-signup:disabled {
+            background-color: #ccc7d0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            color: var(--on-variant);
+            font-size: 12px;
+        }
+
+        .auth-links {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 1.5rem;
+        }
+
+        .auth-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-links-separator {
+            margin: 1rem 0;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 14px;
+            border: 1px solid;
+        }
+
+        .alert-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #2e7d32;
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+
+        .alert-error {
+            background-color: rgba(211, 47, 47, 0.1);
+            color: #c62828;
+            border-color: rgba(211, 47, 47, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <!-- Header -->
+        <div class="signup-header">
+            <h1 class="signup-title">✨ Create Account</h1>
+            <p class="signup-subtitle">Join CIFAKE today</p>
+        </div>
+        
+        <!-- Alerts -->
+        <div id="alertContainer"></div>
+        
+        <!-- Sign Up Form -->
+        <form id="signupForm" class="form-section">
+            <!-- Username -->
+            <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input type="text" class="form-input" id="username" name="username" 
+                       placeholder="3-20 characters" required>
+                <div class="form-hint">3-20 characters (letters, numbers, underscore)</div>
+            </div>
+            
+            <!-- Email -->
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <input type="email" class="form-input" id="email" name="email" 
+                       placeholder="your@email.com" required>
+                <div class="form-hint">We'll never share your email</div>
+            </div>
+            
+            <!-- Password -->
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" class="form-input" id="password" name="password" 
+                       placeholder="Minimum 8 characters" required>
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="strengthBar"></div>
+                </div>
+                <div class="form-hint">Min 8 chars, uppercase, number, special char</div>
+            </div>
+            
+            <!-- Confirm Password -->
+            <div class="form-group">
+                <label class="form-label" for="confirmPassword">Confirm Password</label>
+                <input type="password" class="form-input" id="confirmPassword" name="confirmPassword" 
+                       placeholder="Re-enter your password" required>
+            </div>
+            
+            <!-- Terms & Conditions -->
+            <div class="form-checkbox">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">
+                    I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                </label>
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="btn-signup">Create Account</button>
+        </form>
+        
+        <!-- Divider -->
+        <div class="divider">or</div>
+        
+        <!-- Auth Links -->
+        <div class="auth-links">
+            <div>Already have an account? <a href="/signin">Sign In</a></div>
+            <div class="auth-links-separator"></div>
+            <a href="/">← Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function showAlert(type, message) {
+            const container = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            container.appendChild(alertDiv);
+            
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            const bar = document.getElementById('strengthBar');
+            const width = (strength / 4) * 100;
+            bar.style.width = width + '%';
+            
+            if (strength === 1) bar.className = 'password-strength-bar strength-weak';
+            else if (strength === 2) bar.className = 'password-strength-bar strength-fair';
+            else if (strength === 3) bar.className = 'password-strength-bar strength-good';
+            else if (strength === 4) bar.className = 'password-strength-bar strength-strong';
+            
+            return strength;
+        }
+
+        document.getElementById('password').addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
+
+        function validateForm() {
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+
+            if (username.length < 3 || username.length > 20) {
+                showAlert('error', 'Username must be 3-20 characters');
+                return false;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showAlert('error', 'Please enter a valid email address');
+                return false;
+            }
+
+            if (password.length < 8) {
+                showAlert('error', 'Password must be at least 8 characters');
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                showAlert('error', 'Passwords do not match');
+                return false;
+            }
+
+            if (!terms) {
+                showAlert('error', 'You must agree to the Terms of Service');
+                return false;
+            }
+
+            return true;
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) return;
+            
+            const formData = {
+                username: document.getElementById('username').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value,
+                password_confirm: document.getElementById('confirmPassword').value
+            };
+            
+            try {
+                const response = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showAlert('success', 'Account created! Redirecting to sign in...');
+                    setTimeout(() => {
+                        window.location.href = '/signin?email=' + encodeURIComponent(formData.email);
+                    }, 1500);
+                } else {
+                    const errorMsg = data.errors ? Object.values(data.errors).join(', ') : (data.error || 'Sign up failed');
+                    showAlert('error', errorMsg);
+                }
+            } catch (error) {
+                showAlert('error', 'An error occurred. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "input_size": 32,
+  "filters": [
+    16,
+    32,
+    64
+  ],
+  "dense_units": 256,
+  "dropout": 0.3,
+  "learning_rate": 0.001,
+  "search_val_accuracy": 0.9226666688919067,
+  "final_val_accuracy": 0.9582666754722595,
+  "target_accuracy": 0.9298
+}

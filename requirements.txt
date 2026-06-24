@@ -1,0 +1,60 @@
+# Core Data Processing (Python 3.12 compatible)
+numpy>=1.26.0,<2.0
+pandas>=2.0.0
+scipy>=1.11.0
+
+# Deep Learning
+tensorflow>=2.13.0,<3.0
+keras>=2.13.0
+h5py>=3.9.0
+
+# Computer Vision
+opencv-python>=4.8.0
+scikit-image>=0.20.0
+
+# Machine Learning
+scikit-learn>=1.3.0
+joblib>=1.3.1
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.2
+pillow>=10.0.0
+
+# Web Framework (Python 3.14 compatible)
+Flask>=3.0.0
+Flask-CORS>=4.0.0
+Flask-Session>=0.5.0
+Werkzeug>=3.0.0
+Jinja2>=3.1.2
+MarkupSafe>=2.1.3
+
+# Data Management & Authentication
+sqlalchemy>=2.0.20
+bcrypt>=4.0.1
+
+# Jupyter Notebooks
+jupyter>=1.0.0
+jupyter-client>=8.3.0
+jupyter-core>=5.3.1
+ipython>=8.14.0
+ipykernel==6.25.2
+ipywidgets==8.1.0
+nbconvert==7.8.0
+
+# Utilities
+python-dotenv==1.0.0
+tqdm==4.66.1
+requests==2.31.0
+
+# Code Quality & Testing
+pytest==7.4.0
+pytest-cov==4.1.0
+pylint==2.17.5
+black==23.9.1
+
+# Security
+cryptography==41.0.4
+
+# Protobuf fix for compatibility
+protobuf==3.20.3

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CIFAKE | Image Analysis Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#61de8a",
+                    "primary-fixed-dim": "#b5c8df",
+                    "on-secondary-fixed-variant": "#910807",
+                    "surface": "#f6fafb",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-fixed": "#00210c",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#36485b",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#ffdad5",
+                    "tertiary-fixed": "#7efba4",
+                    "surface-tint": "#4e6073",
+                    "surface-container": "#eaeeef",
+                    "on-surface-variant": "#43474c",
+                    "secondary": "#b4271d",
+                    "on-tertiary-container": "#3cbe6e",
+                    "inverse-on-surface": "#edf1f2",
+                    "primary": "#162839",
+                    "on-secondary-container": "#610001",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#181c1d",
+                    "surface-container-highest": "#dfe3e4",
+                    "outline-variant": "#c4c6cd",
+                    "on-tertiary-fixed-variant": "#005228",
+                    "surface-container-high": "#e5e9ea",
+                    "surface-variant": "#dfe3e4",
+                    "surface-container-lowest": "#ffffff",
+                    "error": "#ba1a1a",
+                    "primary-container": "#2c3e50",
+                    "on-error": "#ffffff",
+                    "inverse-primary": "#b5c8df",
+                    "tertiary": "#002e14",
+                    "on-secondary-fixed": "#410000",
+                    "on-background": "#181c1d",
+                    "surface-container-low": "#f0f4f5",
+                    "surface-bright": "#f6fafb",
+                    "primary-fixed": "#d1e4fb",
+                    "inverse-surface": "#2c3132",
+                    "error-container": "#ffdad6",
+                    "tertiary-container": "#004721",
+                    "on-primary-fixed": "#091d2e",
+                    "on-primary-container": "#96a9be",
+                    "secondary-fixed-dim": "#ffb4a9",
+                    "secondary-container": "#fe5c4a",
+                    "background": "#f6fafb",
+                    "surface-dim": "#d7dbdc",
+                    "outline": "#74777d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "base": "4px",
+                    "margin-desktop": "32px",
+                    "max-width": "1440px",
+                    "margin-mobile": "16px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "code-md": ["JetBrains Mono"],
+                    "headline-md": ["Inter"],
+                    "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "code-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .upload-dashed {
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23BDC3C7' stroke-width='2' stroke-dasharray='8%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+        }
+        .upload-dashed:hover {
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%232C3E50' stroke-width='2' stroke-dasharray='8%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+        }
+        @keyframes subtle-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .drag-active {
+            background-color: #f0f4f8;
+            border-color: #2c3e50 !important;
+            animation: subtle-pulse 1s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="w-full top-0 sticky bg-surface z-50 border-b border-outline-variant">
+<div class="flex justify-between items-center h-16 px-margin-desktop max-w-max-width mx-auto">
+<div class="text-headline-md font-headline-md text-primary tracking-tight">CIFAKE</div>
+        <nav class="flex gap-8 items-center flex-wrap justify-center" id="main-nav">
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/" data-page="home">Home</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/analyzer" data-page="analyzer">Analyzer</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/history" data-page="history">History</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/features" data-page="features">Features</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/technology" data-page="technology">Technology</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/documentation" data-page="documentation">Documentation</a>
+</nav>
+<script>
+(function() {
+const path = window.location.pathname;
+const links = document.querySelectorAll('.nav-link');
+links.forEach(link => {
+const href = link.getAttribute('href');
+const page = link.getAttribute('data-page');
+if ((path === '/' && page === 'home') || path === `/${page}`) {
+link.classList.add('text-primary', 'border-primary');
+}
+});
+})();
+</script>
+<div class="flex gap-4 items-center">
+<button onclick="signOut()" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors px-4 py-2 font-body-md">
+<span class="material-symbols-outlined" style="font-size:20px;">logout</span>Sign Out</button>
+</div>
+<script>
+async function signOut() {
+  await fetch('/logout', { method: 'POST' });
+  window.location.href = '/';
+}
+</script>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow max-w-max-width mx-auto px-margin-desktop py-12 w-full grid grid-cols-1 lg:grid-cols-10 gap-gutter">
+<!-- Left Column (70%) -->
+<div class="lg:col-span-7 space-y-8">
+<!-- Upload Zone -->
+<section class="bg-[#FAFAFA] rounded-xl p-12 flex flex-col items-center justify-center transition-all cursor-pointer upload-dashed group" id="upload-zone">
+<img alt="Upload Icon" class="w-24 h-24 mb-6 group-hover:scale-110 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-0fC3Aq24N7KZgj3dA8kHi_QKgqYb2yRvm6Kr1WnmC1azpr4Y67sJ54wCuLSFLE31CcYeoS_9YRC0l7F_gKKdjrm7jeMydWsTLMggFQkffAE00nR-jX4xc3l9iMs-G7gHk_jFVUiJgKj1Vkt_-f1_6Y_q26CLnxRrvBP0-PLcGpFnbpfdL7SYjCSc3W3GoPpdzByctYmlV9AARsqOfuQu0W4CFlneRCJTe7h-fSlQAyCSyPhrJ-1_RhOp-51hyxaiFP5gnI2FmsI1"/>
+<h2 class="text-[20px] font-bold text-primary mb-2">ANALYZE AN IMAGE</h2>
+<p class="text-on-surface-variant text-body-lg mb-4">Drag &amp; Drop Image Here or Click to Browse</p>
+<div class="text-label-sm text-outline font-medium uppercase tracking-wider">Supported formats: JPG, PNG, WEBP (Max 10MB)</div>
+<input class="hidden" id="file-input" type="file"/>
+</section>
+<!-- Image Preview Card -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-lg p-6 flex flex-col md:flex-row gap-8">
+<!-- Preview Container (1:1) -->
+<div class="w-full md:w-1/2 aspect-square bg-surface-container rounded-lg border border-outline-variant relative overflow-hidden group">
+<img id="preview-image" class="w-full h-full object-cover" data-alt="A high-resolution, professional forensic photography shot of a high-tech server room background, with a digital overlay showing analytical scanning grids. The image is crisp, with a cool blue and clinical white lighting scheme, emphasizing the modern and secure nature of digital forensics. Subtle red glowing data points suggest detected anomalies in a minimalist, high-contrast style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp4ApJh1Gvb76BkQ9tmun37T30Smrr8Vn2NQFnoKnuGnsTEIoKSgNQ5O9XB4NKskevfSpp0uG3S2fmHgk13MqD7hAlMrO5_GXZqSn3ka6EV-Jd-lHlMEjlEqt9HQSkThZ60gOiXhlV4_GzFSRjEcwlZDnBZW1Ztf5oFnR6XJPF33uEIBfAC8qedbsCMrmfRWRVAEe6p5ea1Y_P8UwWg7mwat4wjPvq_ZiOz0F4w5lMCHgjCM3YEB5CCRSI4B2p2OHsr3Qx-pyueVle"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-4xl">zoom_in</span>
+</div>
+</div>
+<!-- Metadata & Actions -->
+<div class="w-full md:w-1/2 flex flex-col justify-between py-2">
+<div>
+<h3 class="text-headline-md font-headline-md text-primary mb-4">File Details</h3>
+<div class="space-y-4">
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-on-surface-variant font-label-sm uppercase">Filename</span>
+<span id="file-name" class="font-code-md text-code-md text-primary">image.jpg</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-on-surface-variant font-label-sm uppercase">Size</span>
+<span id="file-size" class="font-code-md text-code-md text-primary">2.5 MB</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-on-surface-variant font-label-sm uppercase">Status</span>
+<span id="file-status" class="font-code-md text-code-md text-tertiary-container">Ready for analysis</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 mt-8">
+<button id="change-image-btn" class="w-full py-4 border-2 border-primary text-primary font-bold rounded-lg hover:bg-surface-container transition-colors flex items-center justify-center gap-2 active:scale-95 duration-100">
+<span class="material-symbols-outlined">arrow_back</span>
+CHANGE IMAGE
+</button>
+<button id="analyze-btn" class="w-full py-4 bg-[#E74C3C] text-white font-bold rounded-lg hover:brightness-110 shadow-lg shadow-secondary/20 transition-all flex items-center justify-center gap-2 active:scale-95 duration-100">
+ANALYZE 
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Sidebar (30%) -->
+<aside class="lg:col-span-3 space-y-gutter">
+<!-- Info Card 1: How It Works -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant shadow-sm">
+<h4 class="text-body-lg font-bold text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+How It Works
+</h4>
+<ul class="space-y-4">
+<li class="flex gap-4">
+<span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">1</span>
+<p class="text-on-surface-variant text-body-md">Upload a suspect image to our secure forensic environment.</p>
+</li>
+<li class="flex gap-4">
+<span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">2</span>
+<p class="text-on-surface-variant text-body-md">Neural network performs multi-layer artifact scanning.</p>
+</li>
+<li class="flex gap-4">
+<span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">3</span>
+<p class="text-on-surface-variant text-body-md">Heatmaps identify specific areas of AI generation.</p>
+</li>
+<li class="flex gap-4">
+<span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">4</span>
+<p class="text-on-surface-variant text-body-md">Receive a comprehensive PDF forensic report.</p>
+</li>
+</ul>
+<a class="mt-8 inline-flex items-center gap-1 text-primary font-bold hover:underline transition-all" href="#">
+LEARN MORE
+<span class="material-symbols-outlined text-sm">play_arrow</span>
+</a>
+</div>
+<!-- Info Card 2: Model Specs -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant shadow-sm">
+<h4 class="text-body-lg font-bold text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">settings_suggest</span>
+Model Specs
+</h4>
+<div class="space-y-6">
+<div class="p-4 bg-tertiary-fixed-dim/10 rounded-lg border border-tertiary-fixed-dim/30">
+<div class="text-label-sm text-on-tertiary-fixed-variant uppercase font-bold mb-1">Current Accuracy</div>
+<div class="text-headline-md font-headline-md text-on-tertiary-fixed-variant">92.98%</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<div class="text-label-sm text-on-surface-variant uppercase mb-1">Architecture</div>
+<div class="font-code-md text-primary font-bold">CNN</div>
+</div>
+<div>
+<div class="text-label-sm text-on-surface-variant uppercase mb-1">Input Resolution</div>
+<div class="font-code-md text-primary font-bold">32x32 px</div>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant">
+<div class="text-label-sm text-outline mb-2 uppercase">Training Dataset</div>
+<div class="text-body-md text-on-surface-variant">CIFAKE: 60k CIFAR-10 real photos + 60k Stable Diffusion v1.4 synthetic images (32×32 px)</div>
+</div>
+</div>
+</div>
+<!-- Dataset Scope Notice -->
+<div class="bg-amber-50 border border-amber-200 p-5 rounded-xl">
+<h5 class="text-body-md font-bold text-amber-800 mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-600">info</span>
+Dataset Scope
+</h5>
+<p class="text-body-md text-amber-700 text-sm">This model was trained on <strong>CIFAR-10 style images</strong> (32×32 thumbnail objects: aircraft, cats, dogs, ships, etc.) vs. their Stable Diffusion v1.4 equivalents. Best results are obtained with similar image types. Results on general real-world photos may vary.</p>
+</div>
+
+</aside>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-surface-container-lowest border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter px-margin-desktop py-8 max-w-max-width mx-auto items-center">
+<div class="text-label-sm text-on-surface-variant">
+<div class="text-body-lg font-headline-md text-primary mb-2">CIFAKE</div>
+© 2024 CIFAKE Forensics. All rights reserved. Built for security professionals.
+</div>
+<div class="flex flex-wrap gap-x-8 gap-y-2 md:justify-end">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Security Disclosure</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">API Framework</a>
+</div>
+</div>
+</footer>
+<script>
+        const dropZone = document.getElementById('upload-zone');
+        const fileInput = document.getElementById('file-input');
+        const previewImg = document.getElementById('preview-image');
+        const filenameDisplay = document.getElementById('file-name');
+        const sizeDisplay = document.getElementById('file-size');
+        const statusDisplay = document.getElementById('file-status');
+        const changeImageBtn = document.getElementById('change-image-btn');
+        const analyzeBtn = document.getElementById('analyze-btn');
+        
+        let selectedFile = null;
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function handleFileSelect(file) {
+            // Validate file
+            const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            const maxSize = 10 * 1024 * 1024; // 10MB
+
+            if (!validTypes.includes(file.type)) {
+                alert('Invalid file type. Please upload JPG, PNG, or WEBP.');
+                return;
+            }
+
+            if (file.size > maxSize) {
+                alert('File too large. Maximum size is 10MB.');
+                return;
+            }
+
+            selectedFile = file;
+
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            // Update file details
+            filenameDisplay.textContent = file.name;
+            sizeDisplay.textContent = formatFileSize(file.size);
+            statusDisplay.textContent = 'Ready for analysis';
+            statusDisplay.className = 'font-code-md text-code-md text-tertiary-container';
+        }
+
+        // Click to upload
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        // Drag & Drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('drag-active');
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('drag-active');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('drag-active');
+            
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                handleFileSelect(files[0]);
+            }
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        // Change Image button
+        changeImageBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Analyze button
+        analyzeBtn.addEventListener('click', async () => {
+            if (!selectedFile) {
+                alert('Please select an image first.');
+                return;
+            }
+
+            analyzeBtn.disabled = true;
+            const originalText = analyzeBtn.innerHTML;
+            analyzeBtn.innerHTML = 'Analyzing...';
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    // Include the preview image data URL so results/explanation pages can display it
+                    const previewImg = document.getElementById('preview-image');
+                    result.image_url = (previewImg && previewImg.src && previewImg.src.startsWith('data:')) ? previewImg.src : null;
+                    result.filename = selectedFile ? selectedFile.name : 'unknown';
+                    sessionStorage.setItem('current_result', JSON.stringify(result));
+                    window.location.href = '/results';
+                } else {
+                    const errData = await response.json().catch(() => ({}));
+                    alert('Analysis failed: ' + (errData.error || 'Please try again.'));
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.innerHTML = originalText;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error uploading file. Please try again.');
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = originalText;
+            }
+        });
+    </script>
+</body></html>

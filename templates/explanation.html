@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CIFAKE | Detailed Analysis &amp; Explanation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#610001",
+                        "surface-variant": "#dfe3e4",
+                        "outline-variant": "#c4c6cd",
+                        "on-surface": "#181c1d",
+                        "primary-fixed-dim": "#b5c8df",
+                        "on-surface-variant": "#43474c",
+                        "on-tertiary-container": "#3cbe6e",
+                        "tertiary-container": "#004721",
+                        "surface": "#f6fafb",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f0f4f5",
+                        "surface-bright": "#f6fafb",
+                        "on-secondary-fixed-variant": "#910807",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#00210c",
+                        "inverse-on-surface": "#edf1f2",
+                        "surface-container-highest": "#dfe3e4",
+                        "tertiary": "#002e14",
+                        "on-primary-fixed-variant": "#36485b",
+                        "surface-container": "#eaeeef",
+                        "secondary": "#b4271d",
+                        "secondary-container": "#fe5c4a",
+                        "on-primary-container": "#96a9be",
+                        "primary-fixed": "#d1e4fb",
+                        "tertiary-fixed-dim": "#61de8a",
+                        "surface-dim": "#d7dbdc",
+                        "primary": "#162839",
+                        "secondary-fixed": "#ffdad5",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#b5c8df",
+                        "surface-tint": "#4e6073",
+                        "outline": "#74777d",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "on-secondary-fixed": "#410000",
+                        "on-error": "#ffffff",
+                        "background": "#f6fafb",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e5e9ea",
+                        "tertiary-fixed": "#7efba4",
+                        "error": "#ba1a1a",
+                        "on-background": "#181c1d",
+                        "on-primary-fixed": "#091d2e",
+                        "inverse-surface": "#2c3132",
+                        "primary-container": "#2c3e50",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb4a9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "max-width": "1440px",
+                        "base": "4px",
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "code-md": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "code-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .heatmap-overlay {
+            background: radial-gradient(circle at 30% 40%, rgba(231, 76, 60, 0.6) 0%, rgba(231, 76, 60, 0) 50%),
+                        radial-gradient(circle at 70% 60%, rgba(231, 76, 60, 0.4) 0%, rgba(231, 76, 60, 0) 40%);
+            mix-blend-mode: multiply;
+        }
+        .importance-gradient {
+            background: linear-gradient(to top, #3498db 0%, #2ecc71 25%, #f1c40f 50%, #e67e22 75%, #e74c3c 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar Shell -->
+<header class="w-full top-0 sticky z-50 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline">
+<div class="flex justify-between items-center h-16 px-margin-desktop max-w-max-width mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-headline-md font-headline-md text-primary dark:text-primary-fixed-dim tracking-tight">CIFAKE</span>
+<nav class="flex gap-6 flex-wrap" id="main-nav">
+<a class="nav-link text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/" data-page="home">Home</a>
+<a class="nav-link text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/analyzer" data-page="analyzer">Analyzer</a>
+<a class="nav-link text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/history" data-page="history">History</a>
+<a class="nav-link text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/features" data-page="features">Features</a>
+<a class="nav-link text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/technology" data-page="technology">Technology</a>
+<a class="nav-link text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors font-body-md text-body-md pb-1 border-b-2 border-transparent" href="/documentation" data-page="documentation">Documentation</a>
+</nav>
+<script>
+(function() {
+const path = window.location.pathname;
+const links = document.querySelectorAll('.nav-link');
+links.forEach(link => {
+const page = link.getAttribute('data-page');
+if ((path === '/' && page === 'home') || path === `/${page}` || (page === 'analysis' && path.includes('explanation'))) {
+link.classList.add('text-primary', 'dark:text-primary-fixed-dim', 'font-bold', 'border-primary', 'dark:border-primary-fixed-dim');
+link.classList.remove('text-on-surface-variant', 'dark:text-on-surface-variant');
+}
+});
+})();
+</script>
+</div>
+<div class="flex items-center gap-4">
+<button onclick="window.history.back()" class="px-4 py-2 text-on-surface hover:bg-surface-container-low transition-all rounded-lg font-label-sm text-label-sm">← Back</button>
+<a href="/analyzer" class="px-6 py-2 bg-secondary text-on-secondary hover:opacity-90 active:scale-95 duration-100 transition-all rounded-lg font-label-sm text-label-sm">Analyze Another</a>
+<button onclick="signOut()" class="flex items-center gap-1 px-4 py-2 text-on-surface-variant hover:text-primary transition-all rounded-lg font-label-sm text-label-sm">
+<span class="material-symbols-outlined" style="font-size:18px;">logout</span>Sign Out</button>
+</div>
+<script>
+async function signOut() {
+  await fetch('/logout', { method: 'POST' });
+  window.location.href = '/signin';
+}
+</script>
+</div>
+</header>
+<main class="flex-grow">
+<!-- Header Section -->
+<section class="w-full py-12 px-margin-desktop" style="background: linear-gradient(to right, #2C3E50, #34495E);">
+<div class="max-w-max-width mx-auto">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<h1 class="text-headline-lg font-headline-lg text-white mb-2">DETAILED ANALYSIS &amp; EXPLANATION</h1>
+<p class="text-surface-variant font-code-md text-code-md opacity-80" id="imageMetadata">Image: sample.jpg • Jun 23, 2026</p>
+</div>
+<div>
+<span class="inline-flex items-center px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container font-headline-md border border-secondary" id="predictionBadge">
+<span class="material-symbols-outlined mr-2" style="font-variation-settings: 'FILL' 1;">error</span>
+🔴 -- (--% confidence)
+</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Content Grid -->
+<section class="max-w-max-width mx-auto px-margin-desktop py-10">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Column 1: Original & Metadata -->
+<div class="lg:col-span-4 space-y-6">
+<div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-xl">
+<div class="aspect-square w-full relative mb-4 bg-surface-container-highest rounded-lg overflow-hidden border border-outline-variant">
+<img alt="Image under forensic analysis" class="w-full h-full object-cover" id="originalImage" src=""/>
+</div>
+<div class="space-y-2">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Source metadata</h3>
+<div class="grid grid-cols-2 gap-2 font-code-md text-code-md text-on-surface">
+<span class="opacity-60">Size:</span> <span id="metaSize">2.5 MB</span>
+<span class="opacity-60">Format:</span> <span id="metaFormat">JPEG</span>
+<span class="opacity-60">Dimensions:</span> <span id="metaDimensions">512x512px</span>
+<span class="opacity-60">Color Space:</span> <span id="metaColorSpace">sRGB</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 2: Heatmap View -->
+<div class="lg:col-span-6">
+<div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-xl h-full">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-primary uppercase">GRAD-CAM HEATMAP</h3>
+<span class="material-symbols-outlined text-outline cursor-help" title="Grad-CAM visualization shows which pixels were most influential in the model's decision">info</span>
+</div>
+<div class="aspect-square w-full relative rounded-lg overflow-hidden border border-outline-variant">
+<img alt="Forensic heatmap overlay" class="w-full h-full object-cover" id="heatmapBase" src=""/>
+<div class="absolute inset-0 heatmap-overlay"></div>
+<!-- Simulated Heatmap Indicators -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="w-full h-full border-[24px] border-secondary/10"></div>
+</div>
+</div>
+<p class="mt-4 font-body-md text-on-surface-variant text-sm">
+The visualization highlights pixels that contributed most to the model's classification of the image as synthetic.
+</p>
+</div>
+</div>
+<!-- Column 3: Importance Scale -->
+<div class="lg:col-span-2">
+<div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-xl h-full flex flex-col items-center">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-6 text-center">Importance Scale</h3>
+<div class="flex-grow flex items-center gap-4">
+<div class="w-8 h-64 importance-gradient rounded-full shadow-inner border border-outline-variant"></div>
+<div class="flex flex-col justify-between h-64 font-code-md text-code-md">
+<div class="flex items-center gap-2">
+<span class="text-secondary font-bold">100%</span>
+<span class="text-on-surface-variant text-xs">High</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-on-surface opacity-60">50%</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-primary font-bold">0%</span>
+<span class="text-on-surface-variant text-xs">Low</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Key Findings & Model Explanation -->
+<div class="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-gutter mt-8">
+<!-- Key Findings Box -->
+<div class="bg-surface-container-lowest border-2 border-secondary/20 p-8 rounded-xl">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">report</span>
+<h2 class="font-headline-md text-primary">🔴 HIGH IMPORTANCE AREAS</h2>
+</div>
+<div class="space-y-4 text-on-surface">
+<p class="font-body-lg">The forensic engine detected significant diffusion model artifacts in the mid-ground and background textures.</p>
+<ul class="space-y-3 font-body-md list-disc pl-5 text-on-surface-variant" id="findingsList">
+<li><strong>Noise Asymmetry:</strong> Inconsistent grain structure in low-contrast regions suggests non-organic pixel generation.</li>
+<li><strong>Geometric Coherence:</strong> Slight warping in linear edges (fence/structures) inconsistent with physical optics.</li>
+<li><strong>Chroma Bleed:</strong> Unnatural color transitions detected at the edge of the central subject.</li>
+</ul>
+</div>
+</div>
+<!-- Model Decision Explanation -->
+<div class="bg-surface-container-lowest border border-outline-variant p-8 rounded-xl flex flex-col">
+<h3 class="font-headline-md text-primary mb-6">Detection Logic Summary</h3>
+<div class="space-y-6 flex-grow">
+<div class="space-y-3">
+<div class="flex justify-between font-label-sm">
+<span class="text-on-surface">Real Probability</span>
+<span class="text-on-surface" id="realProb">--%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary" id="realBar" style="width: 0%"></div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between font-label-sm">
+<span class="text-secondary font-bold">Fake Probability (Synthetic)</span>
+<span class="text-secondary font-bold" id="fakeProb">--</span>
+</div>
+<div class="w-full h-4 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-right from-secondary to-secondary-container" id="fakeBar" style="width: 0%; background: linear-gradient(90deg, #b4271d 0%, #fe5c4a 100%);"></div>
+</div>
+</div>
+<ol class="space-y-4 mt-4" id="decisionLogic">
+<li class="flex gap-4 items-start">
+<span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 font-code-md text-xs">1</span>
+<p class="text-on-surface-variant text-sm">Background artifacts identified in the high-frequency domain consistent with Stable Diffusion v1.5 VAE decoder.</p>
+</li>
+<li class="flex gap-4 items-start">
+<span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 font-code-md text-xs">2</span>
+<p class="text-on-surface-variant text-sm">Unnatural transitions detected in the gradient of the sky, showing "stepping" patterns typical of 8-bit quantized generation.</p>
+</li>
+<li class="flex gap-4 items-start">
+<span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 font-code-md text-xs">3</span>
+<p class="text-on-surface-variant text-sm">Texture patterns in the landscape foliage lack the fractal complexity found in biological structures.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<!-- Related Info Links -->
+<div class="lg:col-span-12 mt-12 py-8 border-t border-outline-variant">
+<h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-6">Learn more about the technology</h4>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<button class="flex items-center justify-between px-5 py-4 border-2 border-outline-variant text-on-surface hover:bg-surface-container-low hover:border-primary transition-all rounded-xl font-label-sm group">
+About AI Image Generation
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<button class="flex items-center justify-between px-5 py-4 border-2 border-outline-variant text-on-surface hover:bg-surface-container-low hover:border-primary transition-all rounded-xl font-label-sm group">
+How Grad-CAM Works
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<button class="flex items-center justify-between px-5 py-4 border-2 border-outline-variant text-on-surface hover:bg-surface-container-low hover:border-primary transition-all rounded-xl font-label-sm group">
+Model Architecture
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<button class="flex items-center justify-between px-5 py-4 border-2 border-outline-variant text-on-surface hover:bg-surface-container-low hover:border-primary transition-all rounded-xl font-label-sm group">
+FAQ
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Shell -->
+<footer class="w-full mt-auto bg-surface-container-lowest dark:bg-surface-dim border-t border-outline-variant dark:border-outline">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter px-margin-desktop py-8 max-w-max-width mx-auto">
+<div class="space-y-4">
+<span class="text-body-lg font-headline-md text-primary dark:text-primary-fixed-dim">CIFAKE</span>
+<p class="text-on-surface-variant font-label-sm text-label-sm max-w-sm">© 2024 CIFAKE Forensics. All rights reserved. Built for security professionals.</p>
+</div>
+<div class="flex flex-wrap md:justify-end gap-x-8 gap-y-4 items-center">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Security Disclosure</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">API Framework</a>
+</div>
+</div>
+</footer>
+
+<!-- JavaScript -->
+<script>
+// Micro-interaction for the heatmap overlay
+document.addEventListener('DOMContentLoaded', () => {
+    const heatmap = document.querySelector('.heatmap-overlay');
+    if (heatmap) {
+        heatmap.parentElement.addEventListener('mousemove', (e) => {
+            const rect = heatmap.parentElement.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            heatmap.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(231, 76, 60, 0.7) 0%, rgba(231, 76, 60, 0) 50%)`;
+        });
+        heatmap.parentElement.addEventListener('mouseleave', () => {
+            heatmap.style.background = `radial-gradient(circle at 30% 40%, rgba(231, 76, 60, 0.6) 0%, rgba(231, 76, 60, 0) 50%), radial-gradient(circle at 70% 60%, rgba(231, 76, 60, 0.4) 0%, rgba(231, 76, 60, 0) 40%)`;
+        });
+    }
+});
+
+// Load explanation data from URL parameter, API, or sessionStorage
+function loadExplanationData() {
+    const params = new URLSearchParams(window.location.search);
+    const resultId = params.get('id');
+
+    if (resultId) {
+        // Fetch full explanation from backend API
+        fetch(`/api/explanation/${resultId}`)
+            .then(response => response.json())
+            .then(data => {
+                // Try to merge original image URL from sessionStorage if IDs match
+                try {
+                    const stored = JSON.parse(sessionStorage.getItem('current_result') || '{}');
+                    if (String(stored.id) === String(resultId) && stored.image_url) {
+                        data.image_url = stored.image_url;
+                    }
+                } catch(e) {}
+                populateExplanation(data);
+            })
+            .catch(error => console.error('Error loading explanation:', error));
+    } else {
+        // Fall back to sessionStorage (fresh analysis, no ?id= yet)
+        try {
+            const stored = JSON.parse(sessionStorage.getItem('current_result') || 'null');
+            if (stored) {
+                const confidencePct = (parseFloat(stored.confidence) * 100).toFixed(1);
+                const basicData = {
+                    prediction: stored.prediction,
+                    confidence: confidencePct,
+                    filename: stored.filename || stored.image_name || 'uploaded_image',
+                    timestamp: new Date().toISOString(),
+                    image_url: stored.image_url || null,
+                    heatmap_url: stored.heatmap || null,
+                    findings: null,
+                    logic_points: null
+                };
+                populateExplanation(basicData);
+
+                // If we have a DB id, fetch the full rich explanation data
+                if (stored.id) {
+                    window.history.replaceState(null, '', `/explanation?id=${stored.id}`);
+                    fetch(`/api/explanation/${stored.id}`)
+                        .then(r => r.json())
+                        .then(fullData => {
+                            if (stored.image_url) fullData.image_url = stored.image_url;
+                            populateExplanation(fullData);
+                        })
+                        .catch(err => console.warn('Could not fetch full explanation data:', err));
+                }
+            }
+        } catch(e) {
+            console.error('Error loading from sessionStorage:', e);
+        }
+    }
+}
+
+// Populate page with dynamic data
+function populateExplanation(data) {
+    // Update header
+    document.getElementById('imageMetadata').textContent = 
+        `Image: ${data.filename} • ${new Date(data.timestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}`;
+    
+    // Update prediction badge
+    const badgeText = data.prediction === 'FAKE' ? 
+        `🔴 FAKE (${data.confidence}% confidence)` : 
+        `🟢 REAL (${data.confidence}% confidence)`;
+    document.getElementById('predictionBadge').textContent = badgeText;
+    
+    // Update metadata
+    document.getElementById('metaSize').textContent = data.filesize || '2.5 MB';
+    document.getElementById('metaFormat').textContent = data.format || 'JPEG';
+    document.getElementById('metaDimensions').textContent = data.dimensions || '512x512px';
+    document.getElementById('metaColorSpace').textContent = data.colorspace || 'sRGB';
+    
+    // Update images
+    if (data.image_url) {
+        document.getElementById('originalImage').src = data.image_url;
+        document.getElementById('heatmapBase').src = data.image_url;
+    }
+    if (data.heatmap_url) {
+        document.getElementById('heatmapBase').src = data.heatmap_url;
+    }
+    
+    // Update probabilities
+    const fakeConf = parseFloat(data.confidence);
+    const realConf = 100 - fakeConf;
+    document.getElementById('realProb').textContent = realConf.toFixed(1) + '%';
+    document.getElementById('fakeProb').textContent = fakeConf.toFixed(1) + '%';
+    document.getElementById('realBar').style.width = realConf + '%';
+    document.getElementById('fakeBar').style.width = fakeConf + '%';
+    
+    // Update findings
+    if (data.findings && Array.isArray(data.findings)) {
+        const findingsList = document.getElementById('findingsList');
+        findingsList.innerHTML = data.findings
+            .map(finding => `<li><strong>${finding.title}:</strong> ${finding.description}</li>`)
+            .join('');
+    }
+    
+    // Update decision logic
+    if (data.logic_points && Array.isArray(data.logic_points)) {
+        const logicList = document.getElementById('decisionLogic');
+        logicList.innerHTML = data.logic_points
+            .map((point, index) => `
+                <li class="flex gap-4 items-start">
+                    <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 font-code-md text-xs">${index + 1}</span>
+                    <p class="text-on-surface-variant text-sm">${point}</p>
+                </li>
+            `)
+            .join('');
+    }
+}
+
+// Load data on page load
+document.addEventListener('DOMContentLoaded', loadExplanationData);
+</script>
+</body></html>

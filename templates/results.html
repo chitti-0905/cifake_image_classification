@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>CIFAKE Analysis Results</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f6fafb",
+                        "secondary": "#b4271d",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "on-primary-fixed-variant": "#36485b",
+                        "tertiary-fixed": "#7efba4",
+                        "primary-container": "#2c3e50",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#181c1d",
+                        "on-primary-container": "#96a9be",
+                        "surface-dim": "#d7dbdc",
+                        "tertiary-container": "#004721",
+                        "surface-container": "#eaeeef",
+                        "outline-variant": "#c4c6cd",
+                        "surface-bright": "#f6fafb",
+                        "secondary-fixed": "#ffdad5",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2c3132",
+                        "on-surface-variant": "#43474c",
+                        "surface-container-highest": "#dfe3e4",
+                        "on-surface": "#181c1d",
+                        "inverse-on-surface": "#edf1f2",
+                        "surface-tint": "#4e6073",
+                        "secondary-fixed-dim": "#ffb4a9",
+                        "surface-variant": "#dfe3e4",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#002e14",
+                        "error": "#ba1a1a",
+                        "background": "#f6fafb",
+                        "on-tertiary-fixed": "#00210c",
+                        "on-secondary-container": "#610001",
+                        "primary-fixed-dim": "#b5c8df",
+                        "primary": "#162839",
+                        "surface-container-low": "#f0f4f5",
+                        "on-primary-fixed": "#091d2e",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#3cbe6e",
+                        "inverse-primary": "#b5c8df",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#74777d",
+                        "on-secondary-fixed": "#410000",
+                        "on-secondary-fixed-variant": "#910807",
+                        "surface-container-high": "#e5e9ea",
+                        "secondary-container": "#fe5c4a",
+                        "primary-fixed": "#d1e4fb",
+                        "tertiary-fixed-dim": "#61de8a",
+                        "error-container": "#ffdad6",
+                        "cifake-red": "#E74C3C"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem",
+                        "analysis": "12px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "margin-desktop": "32px",
+                        "base": "4px",
+                        "max-width": "1440px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "code-md": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "code-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .heatmap-overlay {
+            background: linear-gradient(45deg, rgba(231, 76, 60, 0.4), rgba(243, 156, 18, 0.4));
+            mix-blend-mode: multiply;
+        }
+        .confidence-gradient {
+            background: linear-gradient(90deg, #E74C3C 0%, #F39C12 100%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface custom-scrollbar">
+    <!-- Top Navigation Bar -->
+    <header class="bg-surface border-b border-outline-variant fixed top-0 w-full z-50">
+        <div class="flex justify-between items-center w-full px-margin-desktop max-w-max-width mx-auto h-16">
+            <div class="flex items-center gap-8">
+                <span class="text-headline-md font-headline-md text-primary tracking-tight">CIFAKE</span>
+                <nav class="flex gap-6 flex-wrap" id="main-nav">
+                    <a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md pb-1 border-b-2 border-transparent" href="/" data-page="home">Home</a>
+                    <a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md pb-1 border-b-2 border-transparent" href="/analyzer" data-page="analyzer">Analyzer</a>
+                    <a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md pb-1 border-b-2 border-transparent" href="/history" data-page="history">History</a>
+                    <a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md pb-1 border-b-2 border-transparent" href="/features" data-page="features">Features</a>
+                    <a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md pb-1 border-b-2 border-transparent" href="/technology" data-page="technology">Technology</a>
+                    <a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-body-md pb-1 border-b-2 border-transparent" href="/documentation" data-page="documentation">Documentation</a>
+                </nav>
+                <script>
+                (function() {
+                const path = window.location.pathname;
+                const links = document.querySelectorAll('.nav-link');
+                links.forEach(link => {
+                const page = link.getAttribute('data-page');
+                if ((path === '/' && page === 'home') || path === `/${page}` || (page === 'results' && path.includes('results'))) {
+                link.classList.add('text-primary', 'border-primary');
+                link.classList.remove('text-on-surface-variant');
+                }
+                });
+                })();
+                </script>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="signOut()" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors px-4 py-2 font-body-md">
+                    <span class="material-symbols-outlined" style="font-size:20px;">logout</span>Sign Out
+                </button>
+            </div>
+            <script>
+            async function signOut() {
+              await fetch('/logout', { method: 'POST' });
+              window.location.href = '/';
+            }
+            </script>
+        </div>
+    </header>
+
+    <div class="flex pt-16 min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="hidden lg:flex flex-col h-[calc(100vh-64px)] w-64 bg-surface-container-low border-r border-outline-variant p-4 gap-2 sticky top-16">
+            <div class="mb-6 px-2">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-primary-container">person</span>
+                    </div>
+                    <div>
+                        <p class="text-body-md font-bold text-primary">Forensic Analyst</p>
+                        <p class="text-label-sm text-on-surface-variant">System v2.4.0</p>
+                    </div>
+                </div>
+            </div>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all" href="/">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="font-label-sm">Dashboard</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container font-bold rounded-lg transition-all" href="/analyzer">
+                <span class="material-symbols-outlined">folder_shared</span>
+                <span class="font-label-sm">Image Analyzer</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all" href="/history">
+                <span class="material-symbols-outlined">history</span>
+                <span class="font-label-sm">History</span>
+            </a>
+            <div class="mt-auto pt-4 border-t border-outline-variant flex flex-col gap-1">
+                <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all" href="#">
+                    <span class="material-symbols-outlined">help</span>
+                    <span class="font-label-sm">Support</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-margin-desktop max-w-[1184px] mx-auto overflow-y-auto">
+            <nav class="flex items-center gap-2 text-label-sm text-on-surface-variant mb-6">
+                <a class="hover:text-primary" href="/">Dashboard</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <a class="hover:text-primary" href="/analyzer">Analysis</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span class="text-primary font-bold">Results</span>
+            </nav>
+
+            <h1 class="font-headline-lg text-headline-lg text-primary mb-8" id="report-title">Analysis Report</h1>
+
+            <!-- 1. Result Summary Card -->
+            <section class="bg-surface-container-lowest border border-outline-variant rounded-analysis p-8 shadow-sm mb-gutter flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-error-container text-cifake-red font-bold text-[24px]" id="result-badge">
+                            <span class="w-3 h-3 rounded-full bg-cifake-red mr-3 animate-pulse"></span>
+                            FAKE (AI-Generated)
+                        </span>
+                    </div>
+                    <div class="flex items-baseline gap-4">
+                        <span class="font-display-lg text-display-lg text-primary" id="confidence-score">--</span>
+                        <span class="text-body-lg text-on-surface-variant" id="confidence-label">Confidence</span>
+                    </div>
+                    <div class="w-full max-w-[300px] h-3 bg-surface-container rounded-full overflow-hidden">
+                        <div class="h-full confidence-gradient" id="confidence-bar" style="width: 0%"></div>
+                    </div>
+                    <p class="text-label-sm text-on-surface-variant" id="ai-prob-label"></p>
+                </div>
+                <div class="flex flex-col items-end gap-6 w-full md:w-auto">
+                    <div class="text-right">
+                        <p class="text-label-sm text-on-surface-variant uppercase tracking-wider">Analysis Metadata</p>
+                        <p class="text-body-md font-bold text-primary" id="processing-time">Processing Time: 1.2s</p>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="exportToPDF()" id="export-btn" class="px-5 py-2.5 rounded-lg bg-primary text-on-primary font-bold hover:bg-primary-container flex items-center gap-2 transition-all active:scale-95">
+                            <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+                            EXPORT PDF
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Comparison Section -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-gutter">
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6">
+                    <h3 class="font-headline-md text-headline-md text-primary mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined">image</span> Original Input
+                    </h3>
+                    <div class="relative w-full aspect-square bg-surface rounded-lg overflow-hidden border border-outline-variant group">
+                        <img id="original-image" alt="Original submitted image" class="w-full h-full object-cover" src=""/>
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all pointer-events-none"></div>
+                        <div class="absolute bottom-4 left-4 bg-black/60 text-white px-2 py-1 rounded text-label-sm backdrop-blur-sm" id="original-image-filename">UPLOADED FILE</div>
+                    </div>
+                </div>
+
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6">
+                    <h3 class="font-headline-md text-headline-md text-primary mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined">analytics</span> Heatmap View
+                    </h3>
+                    <div class="relative w-full aspect-square bg-surface rounded-lg overflow-hidden border border-outline-variant">
+                        <img id="heatmap-image" alt="Heatmap analysis visualization" class="w-full h-full object-cover" src=""/>
+                        <div class="absolute inset-0 heatmap-overlay"></div>
+                        <div class="absolute bottom-4 left-4 bg-black/60 text-white px-2 py-1 rounded text-label-sm backdrop-blur-sm">GRAD-CAM ANALYSIS</div>
+                    </div>
+                </div>
+
+                <div class="col-span-full flex items-center justify-center gap-8 py-4 bg-surface-container-low rounded-xl border border-outline-variant">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input id="heatmap-toggle" checked="" class="w-5 h-5 rounded border-outline text-primary focus:ring-primary transition-all" type="checkbox"/>
+                        <span class="font-bold text-primary group-hover:text-primary-container">Toggle Heatmap Overlay</span>
+                    </label>
+                    <button class="flex items-center gap-2 font-bold text-on-surface-variant hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined">legend_toggle</span>
+                        📊 Show Legend
+                    </button>
+                </div>
+            </section>
+
+            <!-- 3. Interpretation Box -->
+            <section class="bg-[#F8F9FA] border-l-4 border-cifake-red rounded-r-xl p-8 mb-gutter">
+                <h3 class="font-headline-md text-headline-md text-primary mb-6 tracking-tight flex items-center gap-2">
+                    <span class="material-symbols-outlined text-cifake-red">visibility</span>
+                    WHAT THE MODEL SAW
+                </h3>
+                <div id="interpretation-content" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                    <!-- This will be populated dynamically by the backend -->
+                </div>
+            </section>
+
+            <!-- 4. Bottom Grid -->
+            <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-gutter">
+                <a href="/analyzer" class="flex items-center justify-center gap-3 p-6 bg-surface-container-high hover:bg-surface-container-highest rounded-xl text-primary font-bold transition-all active:scale-95 group">
+                    <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                    ⬅️ ANALYZE ANOTHER
+                </a>
+                <button class="flex items-center justify-center gap-3 p-6 bg-surface-container-high hover:bg-surface-container-highest rounded-xl text-primary font-bold transition-all active:scale-95 group">
+                    <span class="material-symbols-outlined group-hover:scale-110 transition-transform">save</span>
+                    💾 SAVE RESULT
+                </button>
+                <a href="/history" class="flex items-center justify-center gap-3 p-6 bg-surface-container-high hover:bg-surface-container-highest rounded-xl text-primary font-bold transition-all active:scale-95 group">
+                    <span class="material-symbols-outlined group-hover:rotate-12 transition-transform">bar_chart</span>
+                    📊 VIEW HISTORY
+                </a>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-surface-container-highest border-t border-outline-variant">
+        <div class="w-full py-8 px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 max-w-max-width mx-auto">
+            <div class="flex flex-col items-center md:items-start gap-2">
+                <span class="font-headline-md text-primary">CIFAKE</span>
+                <p class="text-label-sm text-on-surface-variant">© 2026 CIFAKE Forensic Systems. All rights reserved.</p>
+            </div>
+            <div class="flex gap-6">
+                <a class="text-label-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+                <a class="text-label-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Terms of Service</a>
+                <a class="text-label-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Security Disclosure</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Heatmap toggle functionality
+        const checkbox = document.getElementById('heatmap-toggle');
+        const heatmapOverlay = document.querySelector('.heatmap-overlay');
+        const heatmapImage = document.getElementById('heatmap-image');
+
+        checkbox?.addEventListener('change', (e) => {
+            if (heatmapOverlay && heatmapImage) {
+                if (e.target.checked) {
+                    heatmapOverlay.style.opacity = '1';
+                    heatmapImage.style.opacity = '0.5';
+                } else {
+                    heatmapOverlay.style.opacity = '0';
+                    heatmapImage.style.opacity = '1';
+                    heatmapImage.classList.remove('grayscale');
+                }
+            }
+        });
+
+        // Function to populate results from backend
+        function populateResults(data) {
+            const displayFilename = data.filename || data.image_name || '';
+
+            // Update report title
+            if (displayFilename) {
+                document.getElementById('report-title').textContent = 'Analysis Report: ' + displayFilename;
+            }
+
+            // Update result badge
+            if (data.prediction) {
+                const badge = document.getElementById('result-badge');
+                if (data.prediction === 'FAKE') {
+                    badge.className = 'inline-flex items-center px-4 py-1.5 rounded-full bg-error-container text-cifake-red font-bold text-[24px]';
+                    badge.innerHTML = '<span class="w-3 h-3 rounded-full bg-cifake-red mr-3 animate-pulse"></span>FAKE (AI-Generated)';
+                    // Label: confidence is AI-generated probability
+                    document.getElementById('confidence-label').textContent = 'AI-Generated Probability';
+                } else {
+                    badge.className = 'inline-flex items-center px-4 py-1.5 rounded-full bg-green-100 text-green-700 font-bold text-[24px]';
+                    badge.innerHTML = '<span class="w-3 h-3 rounded-full bg-green-500 mr-3 animate-pulse"></span>REAL (Authentic)';
+                    // Label: confidence is authenticity probability
+                    document.getElementById('confidence-label').textContent = 'Authenticity Confidence';
+                }
+            }
+
+            // Update confidence display
+            // fake_prob = probability the image is AI-generated (index 1 from model)
+            // Always display AI-generated probability on the bar, regardless of prediction label
+            const fakeProbRaw = (data.fake_prob !== undefined) ? parseFloat(data.fake_prob) : null;
+            const confRaw = (data.confidence !== undefined) ? parseFloat(data.confidence) : null;
+
+            // Use fake_prob for the "AI Probability" bar if available, else fall back to confidence
+            const aiProbability = (fakeProbRaw !== null) ? fakeProbRaw * 100 :
+                                   (data.prediction === 'REAL' && confRaw !== null ? (1 - confRaw) * 100 :
+                                   (confRaw !== null ? confRaw * 100 : 0));
+
+            // The confidence score shown next to the badge should reflect the model's confidence
+            // in its actual prediction (what the model is sure about)
+            const predConfPercent = (confRaw !== null) ? confRaw * 100 : aiProbability;
+
+            document.getElementById('confidence-score').textContent = predConfPercent.toFixed(1) + '%';
+            document.getElementById('confidence-bar').style.width = aiProbability + '%';
+
+            // Show secondary label with both probabilities if available
+            if (fakeProbRaw !== null && data.real_prob !== undefined) {
+                const realPct = (parseFloat(data.real_prob) * 100).toFixed(1);
+                const fakePct = (fakeProbRaw * 100).toFixed(1);
+                const aiProbLabelEl = document.getElementById('ai-prob-label');
+                if (aiProbLabelEl) {
+                    aiProbLabelEl.textContent = `Real: ${realPct}% | AI-Generated: ${fakePct}%`;
+                }
+            }
+
+            // Update processing time
+            if (data.processing_time !== undefined) {
+                const processingTimeSeconds = data.processing_time / 1000;
+                document.getElementById('processing-time').textContent = 'Processing Time: ' + processingTimeSeconds.toFixed(2) + 's';
+            }
+
+            // Update original image
+            if (data.image_url) {
+                document.getElementById('original-image').src = data.image_url;
+            }
+            if (displayFilename) {
+                document.getElementById('original-image-filename').textContent = displayFilename.toUpperCase();
+            }
+
+            // Update heatmap
+            if (data.heatmap) {
+                const heatmapEl = document.getElementById('heatmap-image');
+                heatmapEl.src = data.heatmap;
+            }
+
+            // Update analysis details / interpretation
+            if (data.analysis_details) {
+                document.getElementById('interpretation-content').innerHTML = data.analysis_details;
+            } else if (data.interpretation) {
+                document.getElementById('interpretation-content').textContent = data.interpretation;
+            }
+        }
+
+        // PDF Export — opens a print-ready window with full report layout
+        function exportToPDF() {
+            const btn = document.getElementById('export-btn');
+            const origHTML = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">hourglass_top</span> Generating...';
+            btn.disabled = true;
+
+            try {
+                const data = JSON.parse(sessionStorage.getItem('current_result') || '{}');
+                const prediction  = data.prediction || 'N/A';
+                const confRaw     = data.confidence !== undefined ? parseFloat(data.confidence) : null;
+                const confidence  = confRaw !== null ? (confRaw * 100).toFixed(1) : 'N/A';
+                const realPct     = data.real_prob  !== undefined ? (parseFloat(data.real_prob)  * 100).toFixed(1) : 'N/A';
+                const fakePct     = data.fake_prob  !== undefined ? (parseFloat(data.fake_prob)  * 100).toFixed(1) : 'N/A';
+                const filename    = data.filename   || data.image_name || 'unknown';
+                const reportId    = data.report_id  || 'N/A';
+                const procTime    = data.processing_time ? (data.processing_time / 1000).toFixed(2) + 's' : 'N/A';
+                const timestamp   = new Date().toLocaleString();
+                const isFake      = prediction === 'FAKE';
+                const badgeColor  = isFake ? '#E74C3C' : '#27AE60';
+                const badgeBg     = isFake ? '#ffdad6' : '#dcfce7';
+                const badgeText   = isFake ? '🔴 FAKE — AI-Generated' : '🟢 REAL — Authentic';
+                const barWidth    = confRaw !== null ? (confRaw * 100).toFixed(1) : '0';
+
+                const printWin = window.open('', '_blank', 'width=900,height=700');
+                printWin.document.write(`<!DOCTYPE html>
+<html><head><title>CIFAKE Report — ${filename}</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f6fafb; color: #181c1d; padding: 40px; }
+.header { display: flex; justify-content: space-between; align-items: center;
+          border-bottom: 3px solid #162839; padding-bottom: 20px; margin-bottom: 28px; }
+.logo { font-size: 26px; font-weight: 800; color: #162839; letter-spacing: -1px; }
+.meta { font-size: 12px; color: #74777d; font-family: monospace; text-align: right; }
+.verdict { background: ${badgeBg}; border: 2px solid ${badgeColor}40;
+           border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.badge { font-size: 22px; font-weight: 800; color: ${badgeColor}; margin-bottom: 12px; }
+.conf-big { font-size: 52px; font-weight: 800; color: #162839; line-height: 1; }
+.bar-track { width: 280px; height: 10px; background: #eaeeef;
+             border-radius: 8px; overflow: hidden; margin: 8px 0; }
+.bar-fill { height: 100%; border-radius: 8px;
+            background: linear-gradient(90deg, #E74C3C, #F39C12); width: ${barWidth}%; }
+.probs { font-size: 13px; color: #43474c; margin-top: 6px; }
+.section { background: #fff; border: 1px solid #c4c6cd; border-radius: 10px;
+           padding: 20px; margin-bottom: 16px; }
+.sec-title { font-size: 11px; font-weight: 700; color: #74777d; text-transform: uppercase;
+             letter-spacing: 1px; margin-bottom: 14px; }
+.row { display: flex; justify-content: space-between; padding: 7px 0;
+       border-bottom: 1px solid #f0f4f5; font-size: 13px; }
+.row:last-child { border-bottom: none; }
+.row-lbl { color: #74777d; }
+.row-val { font-weight: 700; font-family: monospace; }
+.images { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+.img-box { border: 1px solid #c4c6cd; border-radius: 8px; overflow: hidden; }
+.img-box img { width: 100%; height: 180px; object-fit: cover; display: block; }
+.img-lbl { padding: 5px 10px; font-size: 10px; font-weight: 700;
+           color: #74777d; text-transform: uppercase; background: #f6fafb; }
+.no-img { height: 180px; display: flex; align-items: center;
+          justify-content: center; color: #74777d; font-size: 12px; }
+.interp { font-size: 13px; color: #43474c; line-height: 1.7; }
+.footer { text-align: center; margin-top: 32px; font-size: 10px; color: #74777d;
+          border-top: 1px solid #c4c6cd; padding-top: 14px; }
+@media print { body { padding: 20px; } }
+</style></head><body>
+<div class="header">
+  <div class="logo">CIFAKE</div>
+  <div class="meta">Report ID: ${reportId}<br/>Generated: ${timestamp}</div>
+</div>
+<div class="verdict">
+  <div class="badge">${badgeText}</div>
+  <div class="conf-big">${confidence}%</div>
+  <div class="bar-track"><div class="bar-fill"></div></div>
+  <div class="probs">Real: ${realPct}% &nbsp;|&nbsp; AI-Generated: ${fakePct}%</div>
+</div>
+<div class="images">
+  <div class="img-box">
+    <div class="img-lbl">Original Image</div>
+    ${data.image_url ? `<img src="${data.image_url}" alt="Original"/>` : '<div class="no-img">Not available</div>'}
+  </div>
+  <div class="img-box">
+    <div class="img-lbl">Grad-CAM Heatmap</div>
+    ${data.heatmap ? `<img src="${data.heatmap}" alt="Heatmap"/>` : '<div class="no-img">Not available</div>'}
+  </div>
+</div>
+<div class="section">
+  <div class="sec-title">Analysis Details</div>
+  <div class="row"><span class="row-lbl">Filename</span><span class="row-val">${filename}</span></div>
+  <div class="row"><span class="row-lbl">Prediction</span><span class="row-val" style="color:${badgeColor}">${prediction}</span></div>
+  <div class="row"><span class="row-lbl">Confidence</span><span class="row-val">${confidence}%</span></div>
+  <div class="row"><span class="row-lbl">Real Probability</span><span class="row-val">${realPct}%</span></div>
+  <div class="row"><span class="row-lbl">AI-Generated Probability</span><span class="row-val">${fakePct}%</span></div>
+  <div class="row"><span class="row-lbl">Processing Time</span><span class="row-val">${procTime}</span></div>
+  <div class="row"><span class="row-lbl">Model</span><span class="row-val">Extended CNN (3-block + BatchNorm)</span></div>
+  <div class="row"><span class="row-lbl">Target Accuracy</span><span class="row-val">92.98%</span></div>
+</div>
+<div class="section">
+  <div class="sec-title">Interpretation</div>
+  <p class="interp">${data.interpretation || 'No interpretation available.'}</p>
+</div>
+<div class="footer">
+  CIFAKE Forensic Analysis &nbsp;|&nbsp; CNN + Grad-CAM &nbsp;|&nbsp; Dataset: Bird &amp; Lotfi (2024)<br/>
+  Auto-generated report. Results should be reviewed by a qualified analyst.
+</div>
+</body></html>`);
+                printWin.document.close();
+                setTimeout(() => {
+                    printWin.print();
+                    btn.innerHTML = origHTML;
+                    btn.disabled = false;
+                }, 600);
+            } catch(e) {
+                console.error('PDF export error:', e);
+                btn.innerHTML = origHTML;
+                btn.disabled = false;
+            }
+        }
+
+        // Load from sessionStorage (set by analyzer.html after prediction)
+        try {
+            const currentResult = sessionStorage.getItem('current_result');
+            if (currentResult) {
+                const data = JSON.parse(currentResult);
+                populateResults(data);
+            } else {
+                console.warn('No result data found in sessionStorage');
+            }
+        } catch (error) {
+            console.error('Error loading result from sessionStorage:', error);
+        }
+    </script>
+</body>
+</html>

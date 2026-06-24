@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Documentation | CIFAKE</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#162839",
+                        "secondary": "#b4271d",
+                        "tertiary": "#002e14",
+                        "surface": "#f6fafb",
+                        "on-surface": "#181c1d",
+                        "on-surface-variant": "#43474c",
+                        "outline-variant": "#c4c6cd",
+                        "surface-container-low": "#f0f4f5",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#2c3e50"
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        code {
+            background: #f0f4f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #b4271d;
+        }
+    </style>
+</head>
+<body class="bg-white text-on-surface font-body-md min-h-screen flex flex-col">
+<header class="w-full sticky top-0 bg-surface z-50 border-b border-outline-variant">
+    <div class="flex justify-between items-center h-16 px-8 max-w-6xl mx-auto">
+        <div class="text-2xl font-bold text-primary">CIFAKE</div>
+        <nav class="flex gap-8 flex-wrap justify-center" id="main-nav">
+            <a class="nav-link text-on-surface-variant hover:text-primary transition-colors pb-1 border-b-2 border-transparent" href="/" data-page="home">Home</a>
+            <a class="nav-link text-on-surface-variant hover:text-primary transition-colors pb-1 border-b-2 border-transparent" href="/analyzer" data-page="analyzer">Analyzer</a>
+            <a class="nav-link text-on-surface-variant hover:text-primary transition-colors pb-1 border-b-2 border-transparent" href="/history" data-page="history">History</a>
+            <a class="nav-link text-on-surface-variant hover:text-primary transition-colors pb-1 border-b-2 border-transparent" href="/features" data-page="features">Features</a>
+            <a class="nav-link text-on-surface-variant hover:text-primary transition-colors pb-1 border-b-2 border-transparent" href="/technology" data-page="technology">Technology</a>
+            <a class="nav-link text-on-surface-variant hover:text-primary transition-colors pb-1 border-b-2 border-transparent" href="/documentation" data-page="documentation">Documentation</a>
+        </nav>
+        <script>
+            (function() {
+                const path = window.location.pathname;
+                const links = document.querySelectorAll('.nav-link');
+                links.forEach(link => {
+                    const page = link.getAttribute('data-page');
+                    if ((path === '/' && page === 'home') || path === `/${page}`) {
+                        link.classList.add('text-primary', 'border-primary');
+                    }
+                });
+            })();
+        </script>
+        <div class="flex gap-4">
+            <button onclick="signOut()" class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors px-4 py-2 font-medium">
+                <span class="material-symbols-outlined" style="font-size:18px;">logout</span>Sign Out
+            </button>
+        </div>
+        <script>
+        async function signOut() {
+          await fetch('/logout', { method: 'POST' });
+          window.location.href = '/signin';
+        }
+        </script>
+    </div>
+</header>
+
+<main class="flex-grow max-w-6xl mx-auto px-8 py-16 w-full">
+    <div class="mb-16">
+        <h1 class="text-5xl font-bold text-primary mb-4">Documentation</h1>
+        <p class="text-xl text-on-surface-variant">Learn how to use CIFAKE for AI-generated image detection</p>
+    </div>
+
+    <div class="space-y-12">
+        <!-- Getting Started -->
+        <div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant">
+            <h2 class="text-3xl font-bold text-primary mb-4">Getting Started</h2>
+            <div class="space-y-4 text-on-surface-variant">
+                <p><span class="font-semibold text-on-surface">1. Create an Account</span> - Sign up with your email to access the analysis dashboard</p>
+                <p><span class="font-semibold text-on-surface">2. Upload an Image</span> - Select or drag-and-drop a JPG, PNG, or WEBP image (max 10MB)</p>
+                <p><span class="font-semibold text-on-surface">3. Review Results</span> - View prediction confidence, Grad-CAM heatmap, and detailed analysis</p>
+                <p><span class="font-semibold text-on-surface">4. Export Report</span> - Download a comprehensive forensic analysis report</p>
+            </div>
+        </div>
+
+        <!-- Supported Formats -->
+        <div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant">
+            <h2 class="text-3xl font-bold text-primary mb-4">Supported Image Formats</h2>
+            <div class="space-y-3 text-on-surface-variant">
+                <p><code>JPEG/JPG</code> - Recommended for photos (max 10MB)</p>
+                <p><code>PNG</code> - Best for high-quality images with transparency</p>
+                <p><code>WebP</code> - Modern format with optimal compression</p>
+                <p class="text-sm">All images are processed at 32×32 resolution for analysis</p>
+            </div>
+        </div>
+
+        <!-- Understanding Results -->
+        <div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant">
+            <h2 class="text-3xl font-bold text-primary mb-4">Understanding Results</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="font-semibold text-primary mb-2">Confidence Score</h3>
+                    <p class="text-on-surface-variant">The model outputs a confidence percentage (0-100%) for AI generation likelihood</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-primary mb-2">Grad-CAM Heatmap</h3>
+                    <p class="text-on-surface-variant">Red/warm areas indicate pixels that influenced the AI detection decision. Brighter areas are more significant.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-primary mb-2">Processing Time</h3>
+                    <p class="text-on-surface-variant">Typical inference takes 0.8 seconds from upload to results</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Limitations -->
+        <div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant">
+            <h2 class="text-3xl font-bold text-primary mb-4">Important Limitations</h2>
+            <ul class="space-y-3 text-on-surface-variant">
+                <li>• CIFAKE was trained on images from specific AI generators. Results may vary on other sources.</li>
+                <li>• Highly compressed images or extreme post-processing may affect accuracy</li>
+                <li>• The model achieves 92.98% accuracy - some false positives/negatives are expected</li>
+                <li>• Results should be verified by human experts in critical applications</li>
+                <li>• Not suitable for forensic evidence in court without additional verification</li>
+            </ul>
+        </div>
+
+        <!-- API Documentation -->
+        <div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant">
+            <h2 class="text-3xl font-bold text-primary mb-4">API Integration</h2>
+            <p class="text-on-surface-variant mb-4">For developers looking to integrate CIFAKE into their applications:</p>
+            <div class="bg-white p-4 rounded border border-outline-variant text-sm font-mono text-gray-700 overflow-x-auto mb-4">
+                <p>POST /api/predict</p>
+                <p>Content-Type: multipart/form-data</p>
+                <p>Authorization: Bearer {token}</p>
+                <p>Form Data: { image: File }</p>
+            </div>
+            <p class="text-on-surface-variant">Contact us for API keys and detailed integration documentation</p>
+        </div>
+
+        <!-- FAQ -->
+        <div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant">
+            <h2 class="text-3xl font-bold text-primary mb-6">Frequently Asked Questions</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="font-semibold text-primary mb-2">Is my image stored?</h3>
+                    <p class="text-on-surface-variant">No. Images are processed in real-time and immediately deleted. We do not retain any image data.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-primary mb-2">How accurate is the model?</h3>
+                    <p class="text-on-surface-variant">The model achieves 92.98% accuracy on the CIFAKE test set, but real-world accuracy may vary.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-primary mb-2">Can I export results?</h3>
+                    <p class="text-on-surface-variant">Yes. All predictions can be exported as PDF reports with full analysis details.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-primary mb-2">What about bulk analysis?</h3>
+                    <p class="text-on-surface-variant">Contact our sales team for enterprise API access and batch processing capabilities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-primary-container text-white p-12 rounded-xl text-center mt-16">
+        <h2 class="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+        <a href="/analyzer" class="inline-block bg-secondary text-white px-8 py-3 rounded-lg font-bold hover:opacity-90 transition-opacity">Analyze Your First Image</a>
+    </div>
+</main>
+
+<footer class="w-full mt-auto bg-surface border-t border-outline-variant">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 py-8 max-w-6xl mx-auto items-center">
+        <div class="text-sm text-on-surface-variant">
+            <div class="font-bold text-primary mb-2">CIFAKE</div>
+            © 2024 CIFAKE Forensics. All rights reserved.
+        </div>
+        <div class="flex flex-wrap gap-8 md:justify-end">
+            <a class="text-sm text-on-surface-variant hover:text-primary" href="#">Privacy</a>
+            <a class="text-sm text-on-surface-variant hover:text-primary" href="#">Terms</a>
+            <a class="text-sm text-on-surface-variant hover:text-primary" href="#">Security</a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
