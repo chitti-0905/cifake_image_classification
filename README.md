@@ -368,25 +368,6 @@ Dense(2) → Softmax  # Output: [Real, Fake]
 - **Blue regions**: Minimal influence on prediction
 - **Real images**: Highlights natural textures, object features
 - **Fake images**: Often highlights background artifacts, anomalies
-
----
-
-## Database Schema
-
-### Predictions Table
-```sql
-CREATE TABLE predictions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    image_name TEXT NOT NULL,
-    image_path TEXT NOT NULL,
-    prediction TEXT NOT NULL CHECK(prediction IN ('REAL', 'FAKE')),
-    confidence REAL NOT NULL,
-    interpretation TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-```
-
 ---
 
 ## Development Workflow
@@ -426,30 +407,6 @@ jupyter notebook notebooks/04_gradcam_visualization.ipynb
 - Validate interpretability
 - Generate explanation examples
 - Document findings
-
----
-
-## Configuration
-
-### Environment Variables (.env)
-```
-FLASK_ENV=development
-FLASK_DEBUG=1
-MAX_UPLOAD_SIZE=10485760  # 10MB
-UPLOAD_FOLDER=static/uploads
-DATABASE_PATH=predictions.db
-MODEL_PATH=models/best_model.hdf5
-```
-
-### config.py Settings
-```python
-DEBUG = True
-UPLOAD_FOLDER = 'static/uploads'
-MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10MB max
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-DATABASE_PATH = 'predictions.db'
-MODEL_PATH = 'models/best_model.hdf5'
-```
 
 ---
 
@@ -514,7 +471,6 @@ pytest tests/test_gradcam.py -v
 
 ### Windows Deployment
 ```bash
-# Create startup script: run.bat
 python app.py
 
 # Or configure as Windows service
@@ -523,8 +479,6 @@ python app.py
 
 ### Linux/macOS Deployment
 ```bash
-# Create startup script: run.sh
-#!/bin/bash
 source cifake_env/bin/activate
 python app.py
 ```
@@ -600,19 +554,6 @@ This project is provided for educational and research purposes.
 **Last Updated**: June 2026
 
 For questions or issues, please refer to IMPLEMENTATION_PLAN.md or contact the project team.
-
----
-
-## Citation
-
-If you use this project in research, please cite:
-```bibtex
-@software{cifake2024,
-  title={CIFAKE: Image Classification and Explainable Identification of AI-Generated Synthetic Images},
-  year={2024},
-  note={Educational Computer Vision Project}
-}
-```
 
 ---
 
