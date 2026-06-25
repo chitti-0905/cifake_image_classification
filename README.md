@@ -528,17 +528,6 @@ See `outputs/evaluation_report.md` for detailed analysis.
 - TensorFlow/Keras: https://www.tensorflow.org/
 - Flask Documentation: https://flask.palletsprojects.com/
 - Grad-CAM Implementation: https://github.com/rampls/grad-cam
-
----
-
-## Contributing
-
-Contributions are welcome! Please:
-1. Create feature branch: `git checkout -b feature/your-feature`
-2. Commit changes: `git commit -am 'Add feature'`
-3. Push to branch: `git push origin feature/your-feature`
-4. Submit pull request with description
-
 ---
 
 ## License
